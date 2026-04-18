@@ -114,6 +114,17 @@ def main():
             print("\nTeksti i enkriptuar:", ciphertext)
             print("\nMatrica:")
             print_grid(grid)
+            
+            decrypt_choice = input("\nA doni të dekriptoni një tekst? (po/jo): ").strip().lower()
+            if decrypt_choice == 'po':
+                ciphertext_to_decrypt = input(f"Shkruaj tekstin e enkriptuar për dekriptim ({size*size} karaktere): ")
+                try:
+                    decrypted = decrypt_turning_grille(ciphertext_to_decrypt, size, holes)
+                    print("\nTeksti i dekriptuar:", decrypted)
+                except ValueError as e:
+                    print("Gabim gjatë dekriptimit:", e)
+            else:
+                print("Përfunduar.")
         except ValueError as e:
             print("Gabim:", e)
 
@@ -131,9 +142,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-    print("\nMesazhi i dekriptuar:")
-    print(plaintext[:length])
-else:
-    print("Zgjidhje e pavlefshme. Ju lutemi zgjidhni 1 për enkriptim ose 2 për dekriptim.")
