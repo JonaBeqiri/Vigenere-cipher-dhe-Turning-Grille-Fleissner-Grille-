@@ -21,3 +21,18 @@ def encrypt_turning_grille(message, grille):
                     matrix[i][j] = message[index]
                     index += 1
         grille = rotate_grille(grille)
+
+# kthe matricën në string
+    encrypted = ''.join([''.join(row) for row in matrix])
+    return encrypted
+
+
+# Shembull përdorimi
+grille = [
+    [1, 0, 0, 0],
+    [0, 0, 1, 0],
+    [0, 0, 0, 0],
+    [0, 1, 0, 0]
+]
+
+message = "HELLOWORLD"
