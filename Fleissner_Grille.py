@@ -1,124 +1,136 @@
-zgjedhja = input("Zgjidhni veprimin (1 për enkriptim, 2 për dekriptim): ")
-
-if zgjedhja == '1':
-    
-    # ===== ENKRIPTIMI I RREGULLUAR =====
-
-    def rotate_grille(grille):
-        n = len(grille)
-        return [[grille[n - j - 1][i] for j in range(n)] for i in range(n)]
-
-    def encrypt_turning_grille(message, grille):
-        n = len(grille)
-
-        # Mbush mesazhin me X nëse është më i shkurtë
-        while len(message) < n * n:
-            message += 'X'
-
-        matrix = [['' for _ in range(n)] for _ in range(n)]
-        index = 0
-
-        for _ in range(4):  # 4 rrotullime
-            for i in range(n):
-                for j in range(n):
-                    if grille[i][j] == 1:
-                        if index < len(message):   # kontroll i rëndësishëm
-                            matrix[i][j] = message[index]
-                            index += 1
-            grille = rotate_grille(grille)
-
-        encrypted = ''.join([''.join(row) for row in matrix])
-        return encrypted
+def rotate_position(row, col, size):
+    return col, size - 1 - row
 
 
-    # Grille e saktë (valide)
-    grille = [
-        [1, 0, 0, 0],
-        [0, 0, 1, 0],
-        [0, 1, 0, 0],
-        [0, 0, 0, 1]
-    ]
+def generate_all_rotations(holes, size):
+    rotations = []
+    current = holes[:]
 
-    message = "HELLOWORLD"
+    for _ in range(4):
+        rotations.append(current)
+        current = [rotate_position(r, c, size) for r, c in current]
 
-    encrypted_text = encrypt_turning_grille(message, grille)
-    print("Mesazhi i enkriptuar:", encrypted_text)
+    return rotations
 
 
-elif zgjedhja == '2':
+def validate_grille(holes, size):
+    for r, c in holes:
+        if not (0 <= r < size and 0 <= c < size):
+            raise ValueError(f"Pozicion i pavlefshëm: {(r, c)}")
 
-    # ===== DEKRIPTIMI (PA NDRYSHIME) =====
+    used = set()
+    rotations = generate_all_rotations(holes, size)
 
-    def createGrid(size):
-        return [['' for _ in range(size)] for _ in range(size)]
+    for rotation in rotations:
+        for pos in rotation:
+            if pos in used:
+                raise ValueError(f"Grila nuk është valide. Pozicioni {pos} përsëritet.")
+            used.add(pos)
 
-    def fillGrid(grid, text):
-        index = 0
-        size = len(grid)
+    if len(used) != size * size:
+        raise ValueError(
+            f"Grila nuk i mbulon të gjitha fushat. Ka mbuluar {len(used)} nga {size*size}."
+        )
 
-        for i in range(size):
-            for j in range(size):
-                if index < len(text):
-                    grid[i][j] = text[index]
-                    index += 1
-                else:
-                    grid[i][j] = 'X'
 
-    def rotateGrille(grille):
-        size = len(grille)
-        new_grille = [[0 for _ in range(size)] for _ in range(size)]
+def normalize_text(text):
+    return "".join(text.split()).upper()
 
-        for i in range(size):
-            for j in range(size):
-                new_grille[j][size - 1 - i] = grille[i][j]
 
-        return new_grille
+def encrypt_turning_grille(plaintext, size, holes, filler="X"):
+    validate_grille(holes, size)
 
-    def readGrille(grid, grille):
-        size = len(grid)
-        result = ""
+    text = normalize_text(plaintext)
+    total_cells = size * size
 
-        for i in range(size):
-            for j in range(size):
-                if grille[i][j] == 1:
-                    result += grid[i][j]
+    if len(text) > total_cells:
+        raise ValueError(
+            f"Teksti është shumë i gjatë. Për matricën {size}x{size} lejohen maksimum {total_cells} karaktere."
+        )
 
-        return result
+    text = text.ljust(total_cells, filler)
 
-    def decrypt(ciphertext, grille):
-        size = len(grille)
+    grid = [["" for _ in range(size)] for _ in range(size)]
+    rotations = generate_all_rotations(holes, size)
 
-        grid = createGrid(size)
-        fillGrid(grid, ciphertext)
+    index = 0
+    for rotation in rotations:
+        for r, c in rotation:
+            grid[r][c] = text[index]
+            index += 1
 
-        result = ""
+    ciphertext = "".join("".join(row) for row in grid)
+    return ciphertext, grid
 
-        current_grille = grille
 
-        for _ in range(4):
-            result += readGrille(grid, current_grille)
-            current_grille = rotateGrille(current_grille)
+def decrypt_turning_grille(ciphertext, size, holes):
+    validate_grille(holes, size)
 
-        return result
+    text = normalize_text(ciphertext)
 
-    ciphertext = input("Jep tekstin e enkriptuar: ").replace(" ", "")
-    length = int(input("Jep gjatësinë e mesazhit origjinal: "))   
-    size = int(input("Jep dimensionin e matricës (p.sh., 4 për 4x4): "))
+    if len(text) != size * size:
+        raise ValueError(
+            f"Ciphertext duhet të ketë saktësisht {size*size} karaktere për matricën {size}x{size}."
+        )
 
-    print("Shkruani matricen rresht pas rreshti (1 për vrimë, 0 për pa vrimë):")
+    grid = []
+    index = 0
+    for _ in range(size):
+        row = list(text[index:index + size])
+        grid.append(row)
+        index += size
 
-    grille = []
-    for i in range(size):
-        row = list(map(int, input(f"Row {i+1}: ").split()))
-        grille.append(row)
+    rotations = generate_all_rotations(holes, size)
 
-    plaintext = decrypt(ciphertext, grille)
+    plaintext = []
+    for rotation in rotations:
+        for r, c in rotation:
+            plaintext.append(grid[r][c])
 
-    print("\nMesazhi i dekriptuar:")
-    print(plaintext[:length])
+    return "".join(plaintext).rstrip("X")  # Heq karakteret e mbushjes në fund
 
-else:
-    print("Zgjidhje e pavlefshme. Ju lutemi zgjidhni 1 për enkriptim ose 2 për dekriptim.")
+
+def print_grid(grid):
+    for row in grid:
+        print(" ".join(row))
+
+
+def main():
+    size = 4
+
+    # Grilë valide për 4x4
+    holes = [(0, 0), (0, 1), (1, 0), (1, 1)]
+
+    print("=== Turning Grille / Fleissner Grille ===")
+    print("1. Encrypt")
+    print("2. Decrypt")
+
+    choice = input("Zgjedh opsionin (1 ose 2): ").strip()
+
+    if choice == "1":
+        plaintext = input("Shkruaj tekstin për enkriptim: ")
+        try:
+            ciphertext, grid = encrypt_turning_grille(plaintext, size, holes)
+            print("\nTeksti i enkriptuar:", ciphertext)
+            print("\nMatrica:")
+            print_grid(grid)
+        except ValueError as e:
+            print("Gabim:", e)
+
+    elif choice == "2":
+        ciphertext = input(f"Shkruaj tekstin për dekriptim ({size*size} karaktere): ")
+        try:
+            plaintext = decrypt_turning_grille(ciphertext, size, holes)
+            print("\nTeksti i dekriptuar:", plaintext)
+        except ValueError as e:
+            print("Gabim:", e)
+
+    else:
+        print("Opsion i pavlefshëm.")
+
+
+if __name__ == "__main__":
+    main()
 
 
     print("\nMesazhi i dekriptuar:")
