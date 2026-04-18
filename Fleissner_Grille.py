@@ -6,3 +6,18 @@ def rotate_grille(grille):
 
 def encrypt_turning_grille(message, grille):
     n = len(grille)
+
+ # mbush mesazhin me X nëse është më i shkurtë
+    while len(message) < n * n:
+        message += 'X'
+    
+    matrix = [['' for _ in range(n)] for _ in range(n)]
+    index = 0
+
+    for _ in range(4):  # 4 rrotullime
+        for i in range(n):
+            for j in range(n):
+                if grille[i][j] == 1:
+                    matrix[i][j] = message[index]
+                    index += 1
+        grille = rotate_grille(grille)
