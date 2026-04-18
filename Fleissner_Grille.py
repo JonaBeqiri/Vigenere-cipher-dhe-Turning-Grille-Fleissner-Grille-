@@ -36,3 +36,7 @@ grille = [
 ]
 
 message = "HELLOWORLD"
+
+encrypted_text = encrypt_turning_grille(message, grille)
+print("Mesazhi i enkriptuar:", encrypted_text)
+
