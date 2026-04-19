@@ -69,6 +69,9 @@ Gjatë enkriptimit, programi kalon nëpër çdo karakter të tekstit. Nëse kara
 
 Në pjesën e dekriptimit, përdoruesi jep përsëri tekstin e koduar dhe të njëjtin çelës. Programi përdor të njëjtën logjikë, por këtë herë aplikon formulën (c - k + 26) % 26 për të kthyer çdo shkronjë në formën e saj origjinale. Kështu, kodi realizon me sukses si enkriptimin ashtu edhe dekriptimin duke përdorur parimet bazë të algoritmit Vigenère.
 
+
+
+
 ---
 **Turning (Fleissner) Grille**
 
@@ -124,3 +127,69 @@ Dekriptimi është një process i kundërt me enkriptimin. Programi merr tekstin
 **Validimi i Grilës**
 
 Kodi ka mekanizmin e sigurisë validate_grille që siguron që vrimat e zgjedhura janë valide dhe të mos mbivendosen gjatë rrotullimit si dhe mbulojnë të gjitha qelizat e matricës.
+
+Shënim: Grila e përdorur në këtë shembull është për ilustrim të funksionimit të rrotullimeve. Në praktikë, përdoret funksioni validate_grille për të siguruar që grila është valide dhe mbulon çdo pozicion vetëm një herë.
+
+
+## Rrotullimet e Grilës
+
+Rrotullimi i grilës është një hap kyç në algoritëm. Grila rrotullohet me **90° në drejtim të akrepave të orës (clockwise)** pas çdo raundi të enkriptimit ose dekriptimit.
+
+Në një matricë 4×4, kemi gjithmonë 4 pozicione:
+
+1. 0° (pozicioni fillestar)  
+2. 90°  
+3. 180°  
+4. 270°  
+
+### Shembull i rrotullimeve
+
+Grila fillestare:
+
+```text
+1 | 1 | 0 | 0
+-------------
+1 | 1 | 0 | 0
+-------------
+0 | 0 | 0 | 0
+-------------
+0 | 0 | 0 | 0
+
+
+Rrotullimi 90°
+0 | 0 | 1 | 1
+-------------
+0 | 0 | 1 | 1
+-------------
+0 | 0 | 0 | 0
+-------------
+0 | 0 | 0 | 0
+
+
+Rrotullimi 180°
+0 | 0 | 0 | 0
+-------------
+0 | 0 | 0 | 0
+-------------
+0 | 0 | 1 | 1
+-------------
+0 | 0 | 1 | 1
+
+
+Rrotullimi 270°
+0 | 0 | 0 | 0
+-------------
+0 | 0 | 0 | 0
+-------------
+1 | 1 | 0 | 0
+-------------
+1 | 1 | 0 | 0
+
+Gjatë çdo rrotullimi:
+---vrimat (1) kalojnë në pozicione të reja ,në ato pozicione vendosen shkronjat e radhës dhe pas 4 rrotullimeve mbulohet e gjithë matrica
+
+
+Ide kryesore:
+---Vrimat = çelësi sekret 
+---Çdo pozicion përdoret vetëm një herë gjatë rrotullimeve
+---Pa grilën e saktë, mesazhi nuk mund të lexohet
