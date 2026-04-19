@@ -115,7 +115,7 @@ def main():
             print("\nMatrica:")
             print_grid(grid)
             
-            decrypt_choice = input("\nA doni të dekriptoni një tekst? (po/jo): ").strip().lower()
+            decrypt_choice = input("\nA doni të dekriptoni tekstin? (po/jo): ").strip().lower()
             if decrypt_choice == 'po':
                 ciphertext_to_decrypt = input(f"Shkruaj tekstin e enkriptuar për dekriptim ({size*size} karaktere): ")
                 try:
