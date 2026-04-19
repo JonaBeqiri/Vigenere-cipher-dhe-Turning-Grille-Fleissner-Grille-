@@ -62,12 +62,12 @@ zbrit vlerën e fjalës kyçe
 kthen rezultatin në shkronjë
 
 
-Kodi implementon algoritmin Vigenère Cipher.
+Kodi implementon algoritmin Vigenere Cipher.
  Fillimisht, programi kërkon nga përdoruesi të fusë tekstin që dëshiron të enkriptojë dhe një fjalë kyçe përmes funksionit input(). Kjo fjalë kyçe përdoret për të përcaktuar zhvendosjen e çdo shkronje në tekst. Para se të vazhdojë, programi kontrollon që çelësi të përmbajë vetëm shkronja duke përdorur isalpha(), për të siguruar që algoritmi të funksionojë saktë.
 
 Gjatë enkriptimit, programi kalon nëpër çdo karakter të tekstit. Nëse karakteri është shkronjë ai shndërrohet në një vlerë numerike (0–25) me ord() dhe i shtohet vlera e shkronjës përkatëse nga çelësi, i cili përsëritet automatikisht duke përdorur operatorin modulo sipas gjatësisë së tij. Rezultati llogaritet me formulën (p + k) % 26 dhe kthehet përsëri në shkronjë me chr(), duke ruajtur dallimin mes shkronjave të mëdha dhe të vogla. Nëse karakteri nuk është shkronjë (si hapësira apo simbole), ai mbetet i pandryshuar.
 
-Në pjesën e dekriptimit, përdoruesi jep përsëri tekstin e koduar dhe të njëjtin çelës. Programi përdor të njëjtën logjikë, por këtë herë aplikon formulën (c - k + 26) % 26 për të kthyer çdo shkronjë në formën e saj origjinale. Kështu, kodi realizon me sukses si enkriptimin ashtu edhe dekriptimin duke përdorur parimet bazë të algoritmit Vigenère.
+Në pjesën e dekriptimit, përdoruesi jep përsëri tekstin e koduar dhe të njëjtin çelës. Programi përdor të njëjtën logjikë, por këtë herë aplikon formulën (c - k + 26) % 26 për të kthyer çdo shkronjë në formën e saj origjinale. Kështu, kodi realizon me sukses si enkriptimin ashtu edhe dekriptimin duke përdorur parimet bazë të algoritmit Vigenere Cipher.
 
 
 
