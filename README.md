@@ -68,3 +68,59 @@ Kodi implementon algoritmin Vigenère Cipher.
 Gjatë enkriptimit, programi kalon nëpër çdo karakter të tekstit. Nëse karakteri është shkronjë ai shndërrohet në një vlerë numerike (0–25) me ord() dhe i shtohet vlera e shkronjës përkatëse nga çelësi, i cili përsëritet automatikisht duke përdorur operatorin modulo sipas gjatësisë së tij. Rezultati llogaritet me formulën (p + k) % 26 dhe kthehet përsëri në shkronjë me chr(), duke ruajtur dallimin mes shkronjave të mëdha dhe të vogla. Nëse karakteri nuk është shkronjë (si hapësira apo simbole), ai mbetet i pandryshuar.
 
 Në pjesën e dekriptimit, përdoruesi jep përsëri tekstin e koduar dhe të njëjtin çelës. Programi përdor të njëjtën logjikë, por këtë herë aplikon formulën (c - k + 26) % 26 për të kthyer çdo shkronjë në formën e saj origjinale. Kështu, kodi realizon me sukses si enkriptimin ashtu edhe dekriptimin duke përdorur parimet bazë të algoritmit Vigenère.
+
+---
+**Turning (Fleissner) Grille**
+
+Turning (Fleissner) Grille është një metodë klasike e enkriptimit të të dhenave. Algoritmi përdor një rrjetë (matricë ose grille) me "vrima". Teksti shkruhet në këto vrima dhe pas çdo hapi, grila rrotullohet me 90 gradë në drejtimin e akrepave të orës, derisa të mbushet e gjithë matrica. Kodi i implementuar në këtë projekt i ka 3 funksionalitete kryesore:
+        1. Enkriptimi,
+        2. Dekriptimi,
+        3. Validimi i Matricës (Griles).
+
+**ENKRIPTIMI**
+
+Gjatë enkriptimit programi konverton plaintext-in në ciphertext duke e shpërndarë në matricë përmes rrotullimeve të grilës. Kodi përdorë një matricë standarde të formatit 4x4 me vrima në pikat:
+        
+(0, 0), (0, 1), (1, 0), (1, 1)
+
+1 | 1 | 0 | 0 <br>
+_____________ <br>
+1 | 1 | 0 | 0 <br>
+_____________  <-- Pozita Fillestare<br>
+0 | 0 | 0 | 0 <br>
+_____________ <br>
+0 | 0 | 0 | 0 <br>
+
+
+
+01 | 02 | 08 | 06<br>
+_________________<br>
+03 | 04 | 07 | 05<br>
+_________________  <-- Hapat e plotësimit të matricës<br>
+14 | 16 | 12 | 11<br>
+_________________<br>
+13 | 15 | 10 | 09<br>
+
+Kjo matricë mund të enkriptojë një tekst me gjatësi 16 karaktere. Fillimisht kodi e standardizon tekstin duke i larguar të gjitha hapsirat mes shkronjave dhe duke i kthyer të gjitha në madhësi të njejtë. Pastaj enkriptimi kryhet në 4 raunde, për secilin raund 4 karaktere vendosen në vrimat në matrice pastaj grila rrotullohet për 90° në drejtim të akrepave të orës. Në qoftë se teksti të cilin duam ta enkriptojmë është më i shkurtër se numri i hapsirave në matricë programi do t'i zëvendësojë hapsirat me "X".
+
+Për shembull teksti Hello World enkriptohet si në vijim: 
+
+HELLOWORLD => HEOOLLRWXXXXXXDL
+
+H | E | O | O<br>
+-------------<br>
+L | L | R | W<br>
+-------------<br>
+X | X | X | X<br>
+-------------<br>
+X | X | D | L<br>
+
+Nëse dëshirojmë të enkriptojmë trekst me gjatësi më të madhe për të cilin na nevojitet një matricë me dimensione më të mëdha, si dhe nëse duam ta enkriptojmë duke përdorur një set tjetër të vrimave atëhere ne duhet të ndryshojmë kodin përkatësisht variablat "size" dhe "holes" brenda main-it.
+
+**DEKRIPTIMI**
+
+Dekriptimi është një process i kundërt me enkriptimin. Programi merr tekstin e shifruar dhe, duke përdorur të njëjtën grilë, e kthen në tekstin origjinal duke hequr karakteret mbushëse nga fundi dhe duke e rrotulluar grilen në drejtim të kundërt me procesin e enkriptimit.
+
+**Validimi i Grilës**
+
+Kodi ka mekanizmin e sigurisë validate_grille që siguron që vrimat e zgjedhura janë valide dhe të mos mbivendosen gjatë rrotullimit si dhe mbulojnë të gjitha qelizat e matricës.
