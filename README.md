@@ -73,6 +73,7 @@ Në pjesën e dekriptimit, përdoruesi jep përsëri tekstin e koduar dhe të nj
 
 
 ---
+
 **Turning (Fleissner) Grille**
 
 Turning (Fleissner) Grille është një metodë klasike e enkriptimit të të dhenave. Algoritmi përdor një rrjetë (matricë ose grille) me "vrima". Teksti shkruhet në këto vrima dhe pas çdo hapi, grila rrotullohet me 90 gradë në drejtimin e akrepave të orës, derisa të mbushet e gjithë matrica. Kodi i implementuar në këtë projekt i ka 3 funksionalitete kryesore:
